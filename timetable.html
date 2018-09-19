@@ -1,0 +1,299 @@
+<!DOCTYPE html>
+<html>
+
+	<head>
+		<meta charset="UTF-8">
+		<title>自主约课</title>
+		<meta name="viewport" content="target-densitydpi=device-dpi,width=375,user-scalable=no">
+		<script type="text/javascript" src="https://cdn.bootcss.com/jquery/3.2.1/jquery.min.js"></script>
+		<script type="text/javascript" src="https://test.yusi.tv/web_js/qinhangmobile/fastclick.js"></script>
+
+		<!--日期插件-->
+		<script type="text/javascript" src="https://test.yusi.tv/web_js/qinhangmobile/LCalendar.min.js" ></script>
+		<link rel="stylesheet" href="https://test.yusi.tv/web_css/qinhangmobile/LCalendar.min.css" />
+		
+		<link rel="stylesheet" href="timetable.css" />
+
+	</head>
+
+	<body class="bg-color-white">
+			<div id="change-week">
+				<div>
+					<input type="text" readonly="readonly" name="input_date" id="date-select" style="position: absolute;width: 12.5%;height: 40px;opacity: 0;" data-lcalendar="2018-1,2019-12" />
+					<span id="cur-date">2018-08</span>
+					<img src="https://test.yusi.tv/web_images/qinhangmobile/mycourse/appoint_date_arrow.png" style="width: 7px;height: 12px;"  />
+				</div>
+				<div>
+					<span onclick="arrowClick(-1,this)" id="backWeek-arrow" class="week-back-disable">
+						<img src="https://test.yusi.tv/web_images/qinhangmobile/mycourse/appoint_back_gray.png" style="width: 5.5px;" />
+						上周
+					</span>
+					<span style="margin: 0 10px; color: #5896ff;" onclick="currentWeekClick()">本周</span>
+					<span onclick="arrowClick(1,this)">
+						下周 
+						<img src="https://test.yusi.tv/web_images/qinhangmobile/mycourse/appoint_nexweek.png" style="width: 5.5px;" />
+					</span>
+				</div>
+			</div>
+			<!--时间表-->
+			<div id="time-table">
+				<div id="week-bar">
+					<div class="week-bar-item">
+						<div class="week-num">周一</div>
+						<div class="week-date">25</div>
+					</div>
+					<div class="week-bar-item">
+						<div class="week-num">周二</div>
+						<div class="week-date">25</div>
+					</div>
+					<div class="week-bar-item">
+						<div class="week-num">周三</div>
+						<div class="week-date">25</div>
+					</div>
+					<div class="week-bar-item">
+						<div class="week-num">周四</div>
+						<div class="week-date">25</div>
+					</div>
+					<div class="week-bar-item">
+						<div class="week-num">周五</div>
+						<div class="week-date">25</div>
+					</div>
+					<div class="week-bar-item">
+						<div class="week-num">周六</div>
+						<div class="week-date">25</div>
+					</div>
+					<div class="week-bar-item">
+						<div class="week-num">周日</div>
+						<div class="week-date">25</div>
+					</div>
+				</div>
+				
+				<div id="table-content">
+					<!-- 安卓  12.35%    -->
+					<div class="time-item" style="width: 12.45%;">
+						<div class="am-pm" style="height: 181.5px; font-size: 15px;">
+							<p>上</p><p>午</p>
+						</div>
+						<div class="am-pm" style="height: 272.5px;font-size: 15px;">
+							<p>下</p><p>午</p>
+						</div>
+						<div class="am-pm" style="height: 181.5px;font-size: 15px;">
+							<p>晚</p><p>上</p>
+						</div>
+					</div>
+					<div class="column-item" clomnNum='0'>
+						<div class="table-item" rowNum='0' onclick="tableItemClick(this)">
+							<div class="item-text">
+								<!--8:00 <br />~<br />8:45-->
+							</div>		
+						</div>
+					</div>
+				</div>
+			</div>
+
+		<script>
+			$(function() { FastClick.attach(document.body); });
+		</script>
+		
+		<script type="application/javascript">
+			renderCalendar();
+			function renderCalendar(){
+				var calendar = new LCalendar();
+				var minDate = new Date().getFullYear() + '-' + (new Date().getMonth() + 1);
+				calendar.init({
+	    				'trigger': '#date-select',//标签id
+	    				'type': 'ym',
+	    				'minDate':minDate,//最小日期 
+	    				'maxDate':'2019-12'//最大日期 
+				});
+			}
+			
+			// 0 当前周  -1 上一周  1 下一周
+			function getWeekData(type) {
+				if (!type) type = 0;
+
+				//星期天数据
+				var date = new Date();
+				var show_month = date.getMonth() + 1;
+				var show_year = date.getFullYear();
+				//几号
+				var cur_today = date.getDate();
+				//周几 0 ~ 6
+				var cur_weekNum = date.getDay();
+				cur_weekNum == 0? cur_weekNum = 7: '';
+
+				var weekData = [];
+				//   1 2 3 4 5 6 0
+				var weekArr = ['周一', '周二', '周三', '周四', '周五', '周六', '周日'];
+				for(var i = 0; i < weekArr.length; i++) {
+					//计算是第几日
+					var weekNum = i + 1;
+					var delt_day = weekNum - cur_weekNum + (type * 7);
+					var second_date = date.getTime() + delt_day * 86400000;
+					var new_date = new Date();
+					new_date.setTime(second_date);
+					var isToday = delt_day == 0 ? true : false;
+					if (i == weekArr.length-1) {
+						show_year = new_date.getFullYear();
+						show_month = new_date.getMonth() + 1;
+					}
+
+					var dateStr = new_date.getFullYear() + '-' + (new_date.getMonth() + 1) + '-' + new_date.getDate();
+					var obj = {
+						week: weekArr[i],
+						day: new_date.getDate(),
+						isToday: isToday,
+						date: dateStr
+					}
+					weekData.push(obj);
+				}
+				return {weekData, show_month, show_year};
+			}
+			var tableCourseData = [];
+			
+			function setTableCourseData(timeData){
+				$.each(timeData.weekData, function(i, obj) {
+					for (var j = 0; j < tableCourseData.length; j++) {
+						var timeStr = tableCourseData[j];
+						var mdate = new Date(timeStr.replace(/-/g, '/'));
+						var vs_date = new Date(obj.date.replace(/-/g, '/'));
+							
+						if (vs_date.getFullYear() == mdate.getFullYear() && 
+							vs_date.getMonth() == mdate.getMonth() && 
+							vs_date.getDate() == mdate.getDate()) {		
+							setTableState(j, mdate);
+						}
+	    				}
+				});
+				
+			}
+			
+			// 上午 8:00 ~ 12:00  下午 13:00 ~ 18:00
+			function setTableState(data_index, starDate) {
+				//哪一列  周几
+				var clomnNum = starDate.getDay();
+				clomnNum -= 1;
+				clomnNum == -1 ? clomnNum = 6 : '';
+				//哪个时段
+				var rowNum = -1;
+				var hour = starDate.getHours();
+				hour -= 8;
+				rowNum = hour;
+				//获取单元格
+				var $clumn = $(`.column-item[clomnNum=${clomnNum}]`);
+				var $item = $clumn.children(`[rowNum=${rowNum}]`);
+				$item.children(".item-text").text('有课');
+				$item.attr('data-index', data_index);
+			}
+			
+		</script>
+		
+		<script type="application/javascript">
+			$("#default-page").hide();
+
+			var gray_arrow = "https://test.yusi.tv/web_images/qinhangmobile/mycourse/appoint_back_gray.png";
+			var normal_arrow = "https://test.yusi.tv/web_images/qinhangmobile/mycourse/appoint_lastweek.png";
+			setPage();
+			var current_weekNum = 0;
+			updateWeekbar(getWeekData());
+			function updateWeekbar(weekData){
+		
+				$.each($(".week-bar-item"), function(index, ele) {
+					var dayData = weekData.weekData[index];
+					$(ele).children(".week-date").text(dayData.day);
+					$(ele).css("color", dayData.isToday? "#5896ff": '#666');
+				});
+				$("#cur-date").text(weekData.show_year+'/'+weekData.show_month+'月');
+			}
+			
+			function arrowClick(delt, obj){
+				if (delt == -1 && $(obj).hasClass('week-back-disable')) {
+					return false;
+				}
+    				current_weekNum += delt;
+    				var timeData = getWeekData(current_weekNum);
+    				updateWeekbar(timeData);
+    				
+    				if (current_weekNum <= 0) {
+    					$(obj).addClass('week-back-disable');
+    					$(obj).children('img').attr('src', gray_arrow);
+    				}else{
+    					$(".week-back-disable").removeClass("week-back-disable");
+    					$("#backWeek-arrow").children('img').attr('src', normal_arrow);
+    				}
+
+  			}
+			function currentWeekClick(){
+				current_weekNum = 0;
+				var timeData = getWeekData(current_weekNum);
+				updateWeekbar(timeData);
+			}
+
+			function setPage(){
+				var $table_item =  $(".column-item .table-item");
+				var $item = $(".column-item");
+				for(var i = 0; i < 13; i++){
+					var $clone = $table_item.clone();
+					$clone.attr('rowNum', i+1);
+					$item.append($clone);
+				}
+				
+				for(var i = 0; i < 6; i++){
+					var $clone = $item.clone();		
+					$clone.attr("clomnNum", i+1);
+					$("#table-content").append($clone);
+				}
+			}
+			
+			//监听input值的变化
+			$("#date-select").bind('input propertychange', function(){
+				var dateArr = this.value.split('-');
+				$("#year-num").text(dateArr[0]);
+				$("#month-num").text(dateArr[1]+'月');
+				
+				//计算与当前时间 差几周
+				var cur_date = new Date();
+				var dateStr = this.value.replace(/-/g, '/') + '/08';
+				console.log(dateStr);
+				var target_date = new Date(dateStr);
+				if (target_date.getFullYear() == 2001) return;
+				
+				var s1 = cur_date.getTime(),s2 = target_date.getTime();
+				var total = (s2 - s1)/1000;
+				var week = parseInt(total / (24*60*60*7));//计算整数天数
+				current_weekNum = week;
+				
+				if (dateArr[0] == cur_date.getFullYear() && dateArr[1] == cur_date.getMonth()+1) {
+					current_weekNum = 0;
+				}
+
+				var timeData = getWeekData(current_weekNum);
+				updateWeekbar(timeData);
+
+			});
+			var week_day_arr = ['周一', '周二', '周三', '周四', '周五', '周六', '周日'];
+			function tableItemClick(obj){
+				var cloum = $(obj).parent().attr("clomnNum"); 
+				var row = $(obj).attr("rowNum");
+				if ($(obj).hasClass('item-has-class')) {
+					$(".item-selected").removeClass("item-selected");
+					$(obj).addClass('item-selected');
+					var index = $(obj).attr('data-index');
+					setBottomText(week_day_arr[cloum], parseInt(index));
+				}	
+				console.log("cloum:", cloum);
+				console.log("row:", row);
+			}
+
+			tableCourseData = ["2018-9-22 12:00", "2018-9-23 14:00", "2018-9-19 15:00", "2018-9-17 10:00", "2018-9-18 15:00", "2018-9-18 11:00"];
+			setTableCourseData(getWeekData(current_weekNum));
+
+		</script>
+
+	</body>
+
+</html>
+		
+		
+
+		

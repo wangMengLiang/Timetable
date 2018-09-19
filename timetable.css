@@ -1,0 +1,109 @@
+			
+			html, body{
+				padding: 0;
+				margin: auto;
+				width: 375px;
+			}
+			
+			#time-table{
+				width: 100%;
+				background: white;
+				font-size: 12px;
+				margin-bottom: 120px;
+			}
+			#week-bar{
+				display: flex;
+				height: 50px;
+				margin-top: 5px;
+				border-top: 0.5px solid #dfdfdf;
+			}
+			.week-bar-item, .month-item{
+				width: 12.5%;
+				height: 100%;
+				background-color: white;
+				color: #666666;
+				padding: 8px 0;
+				box-sizing: border-box;
+				-webkit-box-sizing: border-box;
+ 				-moz-box-sizing: border-box;
+ 				
+ 				border-bottom: 0.5px solid #dfdfdf;
+ 				border-right: 0.5px solid #dfdfdf;
+			}
+			.week-bar-item, .month-item div{
+				text-align: center;
+			}
+			
+			#table-content{
+				width: 100%;
+				display: flex;
+
+			}
+			
+			.time-item, .column-item{
+				display: flex;
+				flex-direction: column;
+				width: 12.48%;
+			}
+			.table-item,.am-pm{
+				width: 100%;
+				height: 45px;
+				border-bottom: 0.5px solid #dfdfdf;
+ 				border-right: 0.5px solid #dfdfdf;
+ 				display: flex;
+ 				justify-content: center;
+ 				align-items: center;
+ 				flex-direction: column;
+ 				position: relative;
+			}
+			
+			#change-week{
+				border-top: 1px solid #dfdfdf;
+				display: flex;
+				justify-content: space-between;
+				align-items: center;
+				font-size: 15px;
+				height: 40px;
+				padding: 0 15px;
+				color: #666666;
+			}
+			#change-week span{
+				
+			}
+			.week-num{
+				font-size: 13.8px;
+			}
+			.item-text{
+				line-height: 10px;
+				text-align: center;
+				font-size: 13.8px;
+			}
+			.item-has-class{
+				background-color: #00c0ff;
+				color: white;
+			}
+			.item-class-disable{
+				background-color: #efefef;
+				color: #999999;
+			}
+			.item-selected{
+				background-color: #007da6;
+				color: #a6a6a6;
+			}
+			
+			.selected-icon{
+				width: 22px;
+				position: absolute;
+				top: 15px;
+				left: 12px;
+			}
+			.table-item .selected-icon{
+				display: none;
+			}
+			.item-selected .selected-icon{
+				display: block;
+			}
+			
+			.week-back-disable{
+				color: #a6a6a6;
+			}
